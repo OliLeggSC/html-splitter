@@ -41,7 +41,7 @@ const cullChildTags = (htmlStrArr: string[]) => {
   return culledArr.map(x=>x.tag);
 }
 
-const calcSplit = (html: string, index: number) => {
+const htmlSplit = (html: string, index: number) => {
   const matches = getHtmlElements(html) ?? [];
   let countIndex = 0;
   let countTextualIndex = 0;
@@ -70,7 +70,7 @@ const calcSplit = (html: string, index: number) => {
   return html;
 };
 
-const calcSplit2 = (html: string, index: number): ComputedSegments => {
+const calcSplitter = (html: string, index: number): ComputedSegments => {
   const matches = getHtmlElements(html) ?? [];
   let countIndex = 0;
   let countTextualIndex = 0;
@@ -103,9 +103,9 @@ const computeObj = ({left, missingLeftTags, missingRightTags, right}: ComputedSe
   left + missingLeftTags.join('') + missingRightTags.join('') + right
 
 
-export const calcSplitSelection = (html: string, i1: number, i2: number) => {
-  const ans1 = calcSplit2(html, i1)
-  const ans2 = calcSplit2(computeObj(ans1), i2);
+export const htmlSplitSelection = (html: string, i1: number, i2: number) => {
+  const ans1 = calcSplitter(html, i1)
+  const ans2 = calcSplitter(computeObj(ans1), i2);
   const answer = getHtmlElements(computeObj(ans2)) ?? [];
   const mrtStrs = ans1.missingRightTags.map(x=>getTagName(x)).filter(x=>!x.isClosingTag)
   let start = 0;
@@ -182,7 +182,7 @@ const assertTest = <T>(actual: T, expected: T, params: any) => {
 }
 
 // @ts-ignore
-for (const [params, answer] of tests) test(calcSplit(...params), answer, params);
+for (const [params, answer] of tests) test(htmlSplit(...params), answer, params);
 
 const testsCalcSplitSelection = [
   [['<a href="xyz"><p>This is a link</p></a>', 5,9], '<a href="xyz"><p>is a</p></a>'],
@@ -191,4 +191,4 @@ const testsCalcSplitSelection = [
 ];
 
 // @ts-ignore
-for (const [params, answer] of testsCalcSplitSelection) test(calcSplitSelection(...params), answer, params);
+for (const [params, answer] of testsCalcSplitSelection) test(htmlSplitSelection(...params), answer, params);
